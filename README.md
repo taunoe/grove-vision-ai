@@ -5,7 +5,7 @@
 Grove Vision AI Module contains camera (OV2640) and two microcontrollers.
 
 - **Himax HX6537-A** is an ultra-low power, high performance microcontroller designed for battery-powered TinyML applications.
-- ...
+- **BL702** 32-bit RISC CPU
 
 In addition, there are two sensors:
 
@@ -53,6 +53,7 @@ The trained models are in the file `.uf2`
 
 - [Grove - Vision AI Module](https://www.seeedstudio.com/Grove-Vision-AI-Module-p-5457.html)
 - [Grove-Vision-AI-Module](https://wiki.seeedstudio.com/Grove-Vision-AI-Module/) wiki
+- [TinyML Package Monitor](https://www.hackster.io/hendra/tinyml-package-monitor-ef4710) Hackster.io
 - [VisionAI Automatic Dog Treat Dispenser /wRoboflow and YOLOv5](https://www.hackster.io/satoshiii/visionai-automatic-dog-treat-dispenser-wroboflow-and-yolov5-a71fd2) Hackster.io
 - [Smart Luffa Farming with LoRaWAN](https://www.hackster.io/meilily-li/smart-luffa-farming-with-lorawan-b705b0) Hackster.io
 
