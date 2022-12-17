@@ -25,6 +25,8 @@ The camera supports resolution up to 1600*1200 px, but is set to 192*192 px  due
 ![Vision AI Module Front](img/Grove_vision_ai-01.jpg)
 ![Vision AI Module Back](img/Grove_vision_ai-02.jpg)
 
+![Grove pins](img/Grove_pins-01.jpg)
+
 ## Build Models
 
 - [Ultralytics YOLOv5](https://ultralytics.com/yolov5)
