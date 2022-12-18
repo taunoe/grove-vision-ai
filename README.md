@@ -27,6 +27,8 @@ The camera supports resolution up to 1600x1200 px, but is set to 192x192 px due 
 
 ![Grove pins](img/Grove_pins-01.jpg)
 
+It is not open source product. [Link](https://forum.seeedstudio.com/t/possibility-on-writing-custom-firmware-for-grove-vision-ai-module/266540/6)
+
 ## Build Models
 
 - [Ultralytics YOLOv5](https://ultralytics.com/yolov5)

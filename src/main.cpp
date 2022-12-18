@@ -24,7 +24,7 @@ void setup() {
   Serial.println("begin");
 
   // Object detection and pre-trained model 1
-  if (ai.begin(ALGO_OBJECT_DETECTION, MODEL_EXT_INDEX_1)) {
+  if (ai.begin(ALGO_OBJECT_DETECTION, MODEL_EXT_INDEX_2)) { // 2 -  person_detection_pre_17.uf2
     Serial.print("Version: ");
     Serial.println(ai.version());
     Serial.print("ID: ");
