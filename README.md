@@ -20,7 +20,7 @@ Baud rate 115200.
 
 I2C interface.
 
-The camera supports resolution up to 1600*1200 px, but is set to 192*192 px  due to the limitation of inference speed.
+The camera supports resolution up to 1600x1200 px, but is set to 192x192 px due to the limitation of inference speed.
 
 ![Vision AI Module Front](img/Grove_vision_ai-01.jpg)
 ![Vision AI Module Back](img/Grove_vision_ai-02.jpg)
