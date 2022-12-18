@@ -51,6 +51,11 @@ The trained models are in the file `.uf2`
 
 - [Himax HX6537-A](datasheets/Himax_HX6537-A09TDIG-1111V_Datasheet.pdf) pdf
 
+## Web interface
+
+- Web interface: [taunoe.github.io/grove-ai-vision/](https://taunoe.github.io/grove-ai-vision/)
+- Instructions: [github.com/taunoe/grove-ai-vision](https://github.com/taunoe/grove-ai-vision)
+
 ## Links
 
 - [Grove - Vision AI Module](https://www.seeedstudio.com/Grove-Vision-AI-Module-p-5457.html)
@@ -59,5 +64,5 @@ The trained models are in the file `.uf2`
 - [VisionAI Automatic Dog Treat Dispenser /wRoboflow and YOLOv5](https://www.hackster.io/satoshiii/visionai-automatic-dog-treat-dispenser-wroboflow-and-yolov5-a71fd2) Hackster.io
 - [Smart Luffa Farming with LoRaWAN](https://www.hackster.io/meilily-li/smart-luffa-farming-with-lorawan-b705b0) Hackster.io
 
-
-https://files.seeedstudio.com/grove_ai_vision/index.html
+___
+Tauno Erik 2022
