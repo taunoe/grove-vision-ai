@@ -1,6 +1,18 @@
+/*
+File:     main.cpp
+Author:   Tauno Erik
+Started:  18.12.2022
+Edited:   18.12.2022
+*/
 #include <Arduino.h>
 #include "Seeed_Arduino_GroveAI.h"
 #include <Wire.h>
+
+/*
+Raspberry Pi Pico RP2040 default i2c pins
+  SDA GP4
+  SCL GP5
+*/
 
 GroveAI ai(Wire);
 uint8_t state = 0;
@@ -72,6 +84,6 @@ void loop() {
       Serial.println("Invoke Failed.");
     }
   } else {
-    // if state == 0
+    //Serial.println("state 0");
   }
 }
