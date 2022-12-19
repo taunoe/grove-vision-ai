@@ -8,6 +8,8 @@ import cv2             # pip3 install opencv-python
 import numpy as np
 from threading import Thread
 
+# python3 capture_images_script.py --interval <time_in_ms>
+
 WEBUSB_JPEG_MAGIC = 0x2B2D2B2D
 WEBUSB_TEXT_MAGIC = 0x0F100E12
 

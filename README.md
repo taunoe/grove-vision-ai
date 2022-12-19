@@ -64,6 +64,7 @@ The trained models are in the file `.uf2`
 - [TinyML Package Monitor](https://www.hackster.io/hendra/tinyml-package-monitor-ef4710) Hackster.io
 - [VisionAI Automatic Dog Treat Dispenser /wRoboflow and YOLOv5](https://www.hackster.io/satoshiii/visionai-automatic-dog-treat-dispenser-wroboflow-and-yolov5-a71fd2) Hackster.io
 - [Smart Luffa Farming with LoRaWAN](https://www.hackster.io/meilily-li/smart-luffa-farming-with-lorawan-b705b0) Hackster.io
-
+- [hackster.io/wesee/bird-watcher-with-camera-trap-2cb71f](https://www.hackster.io/wesee/bird-watcher-with-camera-trap-2cb71f)
+- [hackster.io/kutluhan-aktar/iot-ai-driven-tree-disease-identifier-w-edge-impulse-mms-1b5ff6](https://www.hackster.io/kutluhan-aktar/iot-ai-driven-tree-disease-identifier-w-edge-impulse-mms-1b5ff6)
 ___
 Tauno Erik 2022
