@@ -45,7 +45,8 @@ The trained models are in the file `.uf2`
 
 ## Arduino lib
 
-- Github [Seeed-Grove-Vision-AI-Moudle](https://github.com/limengdu/Seeed-Grove-Vision-AI-Moudle)
+- [github.com/limengdu/Seeed-Grove-Vision-AI-Moudle](https://github.com/limengdu/Seeed-Grove-Vision-AI-Moudle)
+- [github.com/Seeed-Studio/Seeed_Arduino_GroveAI](https://github.com/Seeed-Studio/Seeed_Arduino_GroveAI)
 
 ## Datasheets
 
