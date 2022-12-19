@@ -30,7 +30,6 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-
 #include <stdint.h>
 
 /* Exported macros ---------------------------------------------------------*/
