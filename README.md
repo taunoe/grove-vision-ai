@@ -37,7 +37,7 @@ It is not open source product. [Link](https://forum.seeedstudio.com/t/possibilit
 - Tutorial [Train and Deploy Your Own AI Model Into SenseCAP A1101 & Grove - Vision AI](https://wiki.seeedstudio.com/Train-Deploy-AI-Model-A1101-Grove-Vision-AI/)
 - [HIMAX Yolo-Fastest Person Detection Example For Seeed Grove Vision AI Module](https://github.com/HimaxSmartSensing/WE_I_Plus_User_Examples/tree/main/HIMAX_Yolo_Fastest_Person_Detection_Example_For_Grove_AI)
 
-## Upload models to camera
+## Upload models to the camera
 
 The trained models are in the file `.uf2`
 
