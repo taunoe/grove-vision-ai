@@ -41,7 +41,7 @@ It is not open source product. [Link](https://forum.seeedstudio.com/t/possibilit
 
 The trained models are in the file `.uf2`
 
-1. Connect USB-C cable and double click BOOT botton. GROVEAI will be mounted as drive.
+1. Connect the USB-C cable and double-click the BOOT button. GROVEAI will be mounted as a drive.
 
 ## Arduino lib
 
@@ -56,6 +56,20 @@ The trained models are in the file `.uf2`
 
 - Web interface: [taunoe.github.io/grove-ai-vision/](https://taunoe.github.io/grove-ai-vision/)
 - Instructions: [github.com/taunoe/grove-ai-vision](https://github.com/taunoe/grove-ai-vision)
+
+## Linux
+
+Linux may not recognize it as a USB device. Therefore we need to create new rules file. File name: `60-visionai.rules`
+
+File content:
+
+`SUBSYSTEM=="usb", ATTRS{idVendor}=="2886", ATTRS{idProduct}=="8060", MODE="0666"`
+
+Save the new rules file to the /etc/udev/rules.d/ directory.
+
+Restart the udev rules:
+
+`sudo udevadm control --reload-rules`
 
 ## Links
 
