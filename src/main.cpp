@@ -19,12 +19,29 @@ uint8_t state = 0;
 
 
 void setup() {
-  Wire.begin();
   Serial.begin(115200);
-  Serial.println("begin");
+  delay(2000);
+  Serial.println("Begin");
+
+  delay(1000);
+  Wire.begin();
+  Serial.println("Wire.begin()");
+
 
   // Object detection and pre-trained model 1
-  if (ai.begin(ALGO_OBJECT_DETECTION, MODEL_EXT_INDEX_2)) { // 2 -  person_detection_pre_17.uf2
+  
+  //ALGO_OBJECT_DETECTION
+  //ALGO_OBJECT_COUNT
+  //ALGO_IMAGE_CLASSIFICATION. 
+  
+  while (!ai.begin(ALGO_OBJECT_DETECTION, MODEL_EXT_INDEX_2)) {
+    delay(100);
+    Serial.print("state 0");
+  }
+ 
+  state = 1;
+
+  if (state == 1) {
     Serial.print("Version: ");
     Serial.println(ai.version());
     Serial.print("ID: ");
@@ -35,10 +52,10 @@ void setup() {
     Serial.println(ai.model());
     Serial.print("Confidence: ");
     Serial.println(ai.confidence());
-    state = 1;
   } else {
     Serial.println("Algo begin failed.");
   }
+
 }
 
 void loop() {
@@ -84,6 +101,7 @@ void loop() {
       Serial.println("Invoke Failed.");
     }
   } else {
-    //Serial.println("state 0");
+    //Serial.println("state == 0");
   }
+
 }

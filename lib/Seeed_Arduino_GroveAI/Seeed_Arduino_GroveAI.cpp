@@ -25,12 +25,15 @@
  * THE SOFTWARE.
  */
 
+/*
+Modified by Tauno Erik
+18.12.2022 - 18.12.2022
+*/
+
 #include "Seeed_Arduino_GroveAI.h"
 
-GroveAI::GroveAI(TwoWire &wire, uint8_t address)
-{
+GroveAI::GroveAI(TwoWire &wire, uint8_t address) {
     _wire_com = &wire;
-
     _slave_addr = address;
     _algo.model = MODEL_MAX;
     _algo.algo = ALGO_MAX;
@@ -38,17 +41,19 @@ GroveAI::GroveAI(TwoWire &wire, uint8_t address)
     _algo.iou = 45;
 }
 
-GroveAI::~GroveAI()
-{
+GroveAI::~GroveAI() {
+    Serial.println("~GroveAI()");
 }
 
-bool GroveAI::begin(ALGO_INDEX_T algo, MODEL_INDEX_T model, uint8_t confidence)
-{
+bool GroveAI::begin(ALGO_INDEX_T algo, MODEL_INDEX_T model, uint8_t confidence) {
     _wire_com->begin();
+
+    Serial.println("ai.begin()");
 
     uint8_t buf[2];
 
     read(FEATURE_SYSTEM, CMD_SYS_READ_ID, NULL, 0, buf, CMD_SYS_ID_LENGTH);
+    Serial.println("read ended");
     _system.id = buf[0] << 8 | buf[1];
 
     if (GROVE_AI_CAMERA_ID != _system.id)
@@ -87,28 +92,28 @@ bool GroveAI::begin(ALGO_INDEX_T algo, MODEL_INDEX_T model, uint8_t confidence)
     return true;
 }
 
-uint16_t GroveAI::version()
-{
+uint16_t GroveAI::version() {
+    Serial.println("ai.version()");
     return _system.version;
 }
 
-ALGO_INDEX_T GroveAI::algo()
-{
+ALGO_INDEX_T GroveAI::algo() {
+    Serial.println("ai.algo()");
     return (ALGO_INDEX_T)_algo.algo;
 }
 
-MODEL_INDEX_T GroveAI::model()
-{
+MODEL_INDEX_T GroveAI::model() {
+    Serial.println("ai.model()");
     return (MODEL_INDEX_T)_algo.model;
 }
 
-uint8_t GroveAI::confidence()
-{
+uint8_t GroveAI::confidence() {
+    Serial.println("ai.confidence()");
     return _algo.confidence;
 }
 
-CMD_STATE_T GroveAI::state()
-{
+CMD_STATE_T GroveAI::state() {
+    Serial.println("ai.state()");
     uint8_t buf;
 
     read(FEATURE_SYSTEM, CMD_SYS_READ_STATE, NULL, 0, &buf, CMD_SYS_STATE_LENGTH);
@@ -117,18 +122,17 @@ CMD_STATE_T GroveAI::state()
     return _system.state;
 }
 
-uint16_t GroveAI::id()
-{
+uint16_t GroveAI::id() {
+    Serial.println("ai.id()");
     return _system.id;
 }
 
-bool GroveAI::invoke()
-{
+bool GroveAI::invoke() {
+    Serial.println("ai.invoke()");
     write(FEATURE_ALGO, CMD_ALGO_INOVKE, NULL, 0);
 
     CMD_STATE_T ret = CMD_STATE_RUNNING;
-    while (1)
-    {
+    while (1) {
         ret = state();
         if (ret == CMD_STATE_RUNNING)
         {
@@ -141,8 +145,8 @@ bool GroveAI::invoke()
     }
 }
 
-ALGO_INDEX_T GroveAI::set_algo(ALGO_INDEX_T algo)
-{
+ALGO_INDEX_T GroveAI::set_algo(ALGO_INDEX_T algo) {
+    Serial.println("ai.set_algo()");
     uint8_t data = (uint8_t)algo;
     if (_algo.algo != algo)
     {
@@ -158,8 +162,8 @@ ALGO_INDEX_T GroveAI::set_algo(ALGO_INDEX_T algo)
     return (ALGO_INDEX_T)_algo.algo;
 }
 
-MODEL_INDEX_T GroveAI::set_model(MODEL_INDEX_T model)
-{
+MODEL_INDEX_T GroveAI::set_model(MODEL_INDEX_T model) {
+    Serial.println("ai.set_model()");
     uint8_t data = (uint8_t)model;
     if (_algo.model != model)
     {
@@ -175,8 +179,8 @@ MODEL_INDEX_T GroveAI::set_model(MODEL_INDEX_T model)
     return (MODEL_INDEX_T)_algo.model;
 }
 
-uint8_t GroveAI::set_confidence(uint8_t confidence)
-{
+uint8_t GroveAI::set_confidence(uint8_t confidence) {
+    Serial.println("ai.set_confidence()");
     uint8_t data = confidence;
     if (_algo.confidence != confidence)
     {
@@ -192,8 +196,8 @@ uint8_t GroveAI::set_confidence(uint8_t confidence)
     return _algo.confidence;
 }
 
-uint8_t GroveAI::set_iou(uint8_t iou)
-{
+uint8_t GroveAI::set_iou(uint8_t iou) {
+    Serial.println("ai.set_iou()");
     uint8_t data = iou;
     if (_algo.iou != iou)
     {
@@ -209,8 +213,8 @@ uint8_t GroveAI::set_iou(uint8_t iou)
     return _algo.iou;
 }
 
-ALGO_INDEX_T GroveAI::get_algo()
-{
+ALGO_INDEX_T GroveAI::get_algo() {
+    Serial.println("ai.set_algo()");
     uint8_t algo = 0;
 
     read(FEATURE_ALGO, CMD_ALGO_READ_ALGO, NULL, 0, &algo, CMD_ALGO_ALGO_LENGTH);
@@ -220,8 +224,8 @@ ALGO_INDEX_T GroveAI::get_algo()
     return (ALGO_INDEX_T)_algo.algo;
 }
 
-MODEL_INDEX_T GroveAI::get_model()
-{
+MODEL_INDEX_T GroveAI::get_model() {
+    Serial.println("ai.get_model()");
     uint8_t model = 0;
     read(FEATURE_ALGO, CMD_ALGO_READ_MODEL, NULL, 0, &model, CMD_ALGO_MODEL_LENGTH);
 
@@ -230,8 +234,8 @@ MODEL_INDEX_T GroveAI::get_model()
     return (MODEL_INDEX_T)_algo.model;
 }
 
-uint8_t GroveAI::get_confidence()
-{
+uint8_t GroveAI::get_confidence() {
+    Serial.println("ai.get_confidence()");
     uint8_t confidence = 0;
     read(FEATURE_ALGO, CMD_ALGO_READ_CONFIDENCE, NULL, 0, &confidence, CMD_ALGO_CONFIDENCE_LENGTH);
     _algo.confidence = confidence;
@@ -239,8 +243,8 @@ uint8_t GroveAI::get_confidence()
     return _algo.confidence;
 }
 
-uint8_t GroveAI::get_iou()
-{
+uint8_t GroveAI::get_iou() {
+    Serial.println("ai.get_iou()");
     uint8_t iou = 0;
     read(FEATURE_ALGO, CMD_ALGO_READ_IOU, NULL, 0, &iou, CMD_ALGO_IOU_LENGTH);
     _algo.iou = iou;
@@ -248,8 +252,8 @@ uint8_t GroveAI::get_iou()
     return _algo.iou;
 }
 
-uint16_t GroveAI::get_result_len()
-{
+uint16_t GroveAI::get_result_len() {
+    Serial.println("ai.get_result_len()");
     uint8_t buf[2];
     uint16_t len = 0;
     read(FEATURE_ALGO, CMD_ALGO_READ_RET_LEN, NULL, 0, buf, CMD_ALGO_READ_RET_LEN_LENGTH);
@@ -258,8 +262,8 @@ uint16_t GroveAI::get_result_len()
     return len;
 }
 
-void GroveAI::get_result(uint16_t index, uint8_t *buff, uint8_t len)
-{
+void GroveAI::get_result(uint16_t index, uint8_t *buff, uint8_t len) {
+    Serial.println("ai.get_result()");
     uint8_t data[2] = {0};
     data[0] = (index << 8) & 0xFF;
     data[1] = index & 0XFF;
@@ -279,8 +283,8 @@ void GroveAI::get_result(uint16_t index, uint8_t *buff, uint8_t len)
 //}
 
 
-bool GroveAI::config_save()
-{
+bool GroveAI::config_save() {
+    Serial.println("config_save()");
     write(FEATURE_ALGO, CMD_ALGO_CONFIG_SAVE, NULL, 0);
 
     CMD_STATE_T ret = CMD_STATE_RUNNING;
@@ -298,8 +302,8 @@ bool GroveAI::config_save()
     }
 }
 
-bool GroveAI::config_clear()
-{
+bool GroveAI::config_clear() {
+    Serial.println("ai.config_clear()");
     write(FEATURE_ALGO, CMD_ALGO_CONFIG_CLEAR, NULL, 0);
 
     CMD_STATE_T ret = state();
@@ -317,14 +321,14 @@ bool GroveAI::config_clear()
     }
 }
 
-void GroveAI::reset()
-{
+void GroveAI::reset() {
+    Serial.println("ai.reset()");
     write(FEATURE_SYSTEM, CMD_SYS_RESET, NULL, 0);
     delay(5);
 }
 
-void GroveAI::gpio_set_state(uint8_t index, CMD_GPIO_STATE_T state)
-{
+void GroveAI::gpio_set_state(uint8_t index, CMD_GPIO_STATE_T state) {
+    Serial.println("ai.gpio_set_state()");
     uint8_t data[2] = {0};
     if (index < 16)
     {
@@ -334,8 +338,8 @@ void GroveAI::gpio_set_state(uint8_t index, CMD_GPIO_STATE_T state)
     }
 }
 
-CMD_GPIO_STATE_T GroveAI::gpio_get_state(uint8_t index)
-{
+CMD_GPIO_STATE_T GroveAI::gpio_get_state(uint8_t index) {
+    Serial.println("ai.gpio_get_state()");
     uint8_t state = 0;
     if (index < 16)
     {
@@ -345,24 +349,24 @@ CMD_GPIO_STATE_T GroveAI::gpio_get_state(uint8_t index)
     return (CMD_GPIO_STATE_T)state;
 }
 
-bool GroveAI::imu_start()
-{
+bool GroveAI::imu_start() {
+    Serial.println("ai.imu_start()");
     uint8_t state = CMD_IMU_SAMPLE_AVAILABLE;
     write(FEATURE_IMU, CMD_IMU_WRITE_SAMPLE_STATE, &state, CMD_IMU_WRITE_SAMPLE_LENGTH);
 
     return true;
 }
 
-bool GroveAI::imu_stop()
-{
+bool GroveAI::imu_stop() {
+    Serial.println("ai.imu_stop()");
     uint8_t state = 0;
     write(FEATURE_IMU, CMD_IMU_WRITE_SAMPLE_STATE, &state, CMD_IMU_WRITE_SAMPLE_LENGTH);
 
     return true;
 }
 
-float GroveAI::get_acc_x()
-{
+float GroveAI::get_acc_x() {
+    Serial.println("ai.get_acc_x()");
     float value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_ACC_X, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_X_LENGTH);
@@ -370,8 +374,8 @@ float GroveAI::get_acc_x()
     return value;
 }
 
-float GroveAI::get_acc_y()
-{
+float GroveAI::get_acc_y() {
+    Serial.println("ai.get_acc_y()");
     float value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_ACC_Y, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_Y_LENGTH);
@@ -379,8 +383,8 @@ float GroveAI::get_acc_y()
     return value;
 }
 
-float GroveAI::get_acc_z()
-{
+float GroveAI::get_acc_z() {
+    Serial.println("ai.get_acc_z()");
     float value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_ACC_Z, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_Z_LENGTH);
@@ -388,8 +392,8 @@ float GroveAI::get_acc_z()
     return value;
 }
 
-float GroveAI::get_gyro_x()
-{
+float GroveAI::get_gyro_x() {
+    Serial.println("ai.get_gyro_x()");
     float value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_GYRO_X, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_X_LENGTH);
@@ -397,16 +401,16 @@ float GroveAI::get_gyro_x()
     return value;
 }
 
-float GroveAI::get_gyro_y()
-{
+float GroveAI::get_gyro_y() {
+    Serial.println("ai.get_gyro_y()");
     float value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_GYRO_Y, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_Y_LENGTH);
     return value;
 }
 
-float GroveAI::get_gyro_z()
-{
+float GroveAI::get_gyro_z() {
+    Serial.println("ai.get_gyro_z()");
     float value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_GYRO_Z, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_Z_LENGTH);
@@ -414,8 +418,8 @@ float GroveAI::get_gyro_z()
     return value;
 }
 
-bool GroveAI::acc_available()
-{
+bool GroveAI::acc_available() {
+    Serial.println("ai.acc_available()");
     uint8_t value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_ACC_AVAIABLE, NULL, 0, &value, CMD_IMU_READ_ACC_AVAIABLE_LENGTH);
@@ -423,8 +427,8 @@ bool GroveAI::acc_available()
     return value;
 }
 
-bool GroveAI::gyro_available()
-{
+bool GroveAI::gyro_available() {
+    Serial.println("ai.gyro_available()");
     uint8_t value = 0;
 
     read(FEATURE_IMU, CMD_IMU_READ_GYRO_AVAIABLE, NULL, 0, &value, CMD_IMU_READ_GYRO_AVAIABLE_LENGTH);
@@ -432,8 +436,8 @@ bool GroveAI::gyro_available()
     return value;
 }
 
-void GroveAI::read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_len, uint8_t *buf, uint16_t len)
-{
+void GroveAI::read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_len, uint8_t *buf, uint16_t len) {
+    Serial.println("ai.read()");
     uint8_t i = 0;
     uint8_t c = 0;
     // while (digitalRead(_signal_pin) == 0)
@@ -472,8 +476,8 @@ void GroveAI::read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_l
     }
 }
 
-void GroveAI::write(uint8_t feature, uint8_t cmd, uint8_t *buf, uint16_t len)
-{
+void GroveAI::write(uint8_t feature, uint8_t cmd, uint8_t *buf, uint16_t len) {
+    Serial.println("ai.write()");
     uint32_t tick = millis();
     // while (digitalRead(_signal_pin) == 0)
     // {

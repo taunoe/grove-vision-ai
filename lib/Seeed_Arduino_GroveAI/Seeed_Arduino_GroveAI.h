@@ -241,7 +241,7 @@ public:
     bool config_save();
     bool config_clear();
     uint16_t get_result_len();
-    void get_result(uint16_t index, uint8_t *buff, uint8_t len);
+    void get_result(uint16_t index, uint8_t *buf, uint8_t len);
 
 protected:
     void read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_len, uint8_t *buf, uint16_t len);
