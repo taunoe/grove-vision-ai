@@ -106,38 +106,35 @@
 #define CMD_IMU_ACC_AVAILABLE 0x01
 #define CMD_IMU_GYRO_AVAILABLE 0x01
 
-typedef enum
-{
-    CMD_GPIO_MODE_INPUT = 0x00,
-    CMD_GPIO_MODE_OUTPUT = 0x01,
-    CMD_GPIO_MODE_NONE = 0x02
+typedef enum {
+  CMD_GPIO_MODE_INPUT = 0x00,
+  CMD_GPIO_MODE_OUTPUT = 0x01,
+  CMD_GPIO_MODE_NONE = 0x02
 } CMD_GPIO_MODE_T;
 
-typedef enum
-{
-    CMD_GPIO_STATE_LOW = 0x00,
-    CMD_GPIO_STATE_HIGH = 0x01,
+typedef enum {
+  CMD_GPIO_STATE_LOW = 0x00,
+  CMD_GPIO_STATE_HIGH = 0x01,
 } CMD_GPIO_STATE_T;
 
-typedef enum
-{
-    ALGO_OBJECT_DETECTION = 0,
-    ALGO_OBJECT_COUNT = 1,
-    ALGO_IMAGE_CLASSIFICATION = 2,
-    ALGO_MAX,
+typedef enum {
+  ALGO_OBJECT_DETECTION = 0,
+  ALGO_OBJECT_COUNT = 1,
+  ALGO_IMAGE_CLASSIFICATION = 2,
+  ALGO_MAX,
 } ALGO_INDEX_T;
 
-typedef enum
-{
-    MODEL_PRE_INDEX_1 = 0x00,
-    MODEL_PRE_INDEX_2 = 0x01,
-    MODEL_PRE_INDEX_3 = 0x02,
-    MODEL_PRE_INDEX_4 = 0x03,
-    MODEL_EXT_INDEX_1 = 0x10,
-    MODEL_EXT_INDEX_2 = 0x11,
-    MODEL_EXT_INDEX_3 = 0x12,
-    MODEL_EXT_INDEX_4 = 0x13,
-    MODEL_MAX
+typedef enum {
+  MODEL_PRE_INDEX_1 = 0x00,
+  MODEL_PRE_INDEX_2 = 0x01,
+  MODEL_PRE_INDEX_3 = 0x02,
+  MODEL_PRE_INDEX_4 = 0x03,
+
+  MODEL_EXT_INDEX_1 = 0x10,
+  MODEL_EXT_INDEX_2 = 0x11,
+  MODEL_EXT_INDEX_3 = 0x12,
+  MODEL_EXT_INDEX_4 = 0x13,
+  MODEL_MAX
 } MODEL_INDEX_T;
 
 /**
@@ -146,11 +143,10 @@ typedef enum
  * This enumeration type is used to record CMD interaction status
  *
  */
-typedef enum cmd_state
-{
-    CMD_STATE_IDLE = 0x0,
-    CMD_STATE_RUNNING = 0x01,
-    CMD_STATE_ERROR = 0x02
+typedef enum cmd_state {
+  CMD_STATE_IDLE = 0x0,
+  CMD_STATE_RUNNING = 0x01,
+  CMD_STATE_ERROR = 0x02
 } CMD_STATE_T;
 
 /**
@@ -159,8 +155,7 @@ typedef enum cmd_state
  *
  *
  */
-typedef struct
-{
+typedef struct {
     uint16_t version;
     uint16_t id;
     CMD_STATE_T state;
@@ -172,8 +167,7 @@ typedef struct
  *
  *
  */
-typedef struct
-{
+typedef struct {
     uint8_t algo;
     uint8_t model;
     uint8_t state;
@@ -181,8 +175,7 @@ typedef struct
     uint8_t confidence;
 } cmd_algo_event_t;
 
-typedef struct
-{
+typedef struct {
     uint16_t x;
     uint16_t y;
     uint16_t w;
@@ -192,29 +185,26 @@ typedef struct
 } object_detection_t;
 
 
-typedef struct
-{
+typedef struct {
     uint8_t target;
     uint8_t confidence;
 } image_classification_t;
 
-typedef struct
-{
+typedef struct {
     uint8_t target;
     uint8_t count;
 } object_count_t;
 
 
-class GroveAI
-{
-private:
+class GroveAI {
+  private:
     cmd_sys_event_t _system;
     cmd_algo_event_t _algo;
     TwoWire *_wire_com;
     uint8_t _slave_addr;
-    uint32_t _signal_pin;
+    //uint32_t _signal_pin;
 
-public:
+  public:
     GroveAI(TwoWire &wire, uint8_t address = GROVE_AI_ADDRESS);
     ~GroveAI();
     bool begin(ALGO_INDEX_T algo, MODEL_INDEX_T model, uint8_t confidence = 50);
@@ -224,7 +214,10 @@ public:
     ALGO_INDEX_T algo();
     MODEL_INDEX_T model();
     uint8_t confidence();
+
     void gpio_set_state(uint8_t index, CMD_GPIO_STATE_T state);
+    CMD_GPIO_STATE_T gpio_get_state(uint8_t index);
+
     bool imu_start();
     bool imu_stop();
     bool acc_available();
@@ -235,7 +228,7 @@ public:
     float get_gyro_x();
     float get_gyro_y();
     float get_gyro_z();
-    CMD_GPIO_STATE_T gpio_get_state(uint8_t index);
+    
     bool invoke();
     void reset();
     bool config_save();
@@ -243,7 +236,7 @@ public:
     uint16_t get_result_len();
     void get_result(uint16_t index, uint8_t *buf, uint8_t len);
 
-protected:
+  protected:
     void read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_len, uint8_t *buf, uint16_t len);
     void write(uint8_t feature, uint8_t cmd, uint8_t *buf, uint16_t len);
     ALGO_INDEX_T set_algo(ALGO_INDEX_T algo);
@@ -254,7 +247,7 @@ protected:
     MODEL_INDEX_T get_model();
     uint8_t get_confidence();
     uint8_t get_iou();
-    bool check_busy();
+    //bool check_busy();
 };
 
 #endif

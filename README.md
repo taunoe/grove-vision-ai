@@ -2,17 +2,17 @@
 
 ## What it is
 
-Grove Vision AI Module contains camera (OV2640) and two microcontrollers.
+Grove Vision AI Module contains a camera (OV2640) and two microcontrollers.
 
-- **Himax HX6537-A** is an ultra-low power, high performance microcontroller designed for battery-powered TinyML applications.
+- **Himax HX6537-A** is an ultra-low-power, high-performance microcontroller designed for battery-powered TinyML applications.
 - **BL702** 32-bit RISC CPU
 
 In addition, there are two sensors:
 
-- Micropone
-- 3D Accelerometer nad gyroscope,  6-axis Inertial Measurement Unit (IMU)
+- Micropone MSM261D3526H1CPM
+- 3D Accelerometer and gyroscope,  6-axis Inertial Measurement Unit (IMU)
 
-Dual 7-pin hraders are compatible XIAO series boards.
+Dual 7-pin headers are compatible XIAO series boards.
 
 Operating Voltage 5v.
 
@@ -20,7 +20,7 @@ Baud rate 115200.
 
 I2C interface.
 
-The camera supports resolution up to 1600x1200 px, but is set to 192x192 px due to the limitation of inference speed.
+The camera supports resolution up to 1600x1200 px but is set to 192x192 px due to the limitation of inference speed.
 
 ![Vision AI Module Front](img/Grove_vision_ai-01.jpg)
 ![Vision AI Module Back](img/Grove_vision_ai-02.jpg)

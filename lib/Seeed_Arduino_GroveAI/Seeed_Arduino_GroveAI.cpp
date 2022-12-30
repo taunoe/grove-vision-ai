@@ -27,143 +27,119 @@
 
 /*
 Modified by Tauno Erik
-18.12.2022 - 18.12.2022
+18.12.2022 - 26.12.2022
 */
 
 #include "Seeed_Arduino_GroveAI.h"
 
 GroveAI::GroveAI(TwoWire &wire, uint8_t address) {
-    _wire_com = &wire;
-    _slave_addr = address;
-    _algo.model = MODEL_MAX;
-    _algo.algo = ALGO_MAX;
-    _algo.confidence = 50;
-    _algo.iou = 45;
+  _wire_com = &wire;
+  _slave_addr = address;
+  _algo.model = MODEL_MAX;
+  _algo.algo = ALGO_MAX;
+  _algo.confidence = 50;
+  _algo.iou = 45;
 }
 
 GroveAI::~GroveAI() {
-    Serial.println("~GroveAI()");
+  //
 }
 
 bool GroveAI::begin(ALGO_INDEX_T algo, MODEL_INDEX_T model, uint8_t confidence) {
-    _wire_com->begin();
+  _wire_com->begin();
 
-    Serial.println("ai.begin()");
+  uint8_t buf[2];
+  read(FEATURE_SYSTEM, CMD_SYS_READ_ID, NULL, 0, buf, CMD_SYS_ID_LENGTH);
+  _system.id = buf[0] << 8 | buf[1];
 
-    uint8_t buf[2];
+  if (GROVE_AI_CAMERA_ID != _system.id) {
+    return false;
+  }
 
-    read(FEATURE_SYSTEM, CMD_SYS_READ_ID, NULL, 0, buf, CMD_SYS_ID_LENGTH);
-    Serial.println("read ended");
-    _system.id = buf[0] << 8 | buf[1];
+  read(FEATURE_SYSTEM, CMD_SYS_READ_VERSION, NULL, 0, buf, CMD_SYS_VERSION_LENGTH);
+  _system.version = buf[0] << 8 | buf[1];
 
-    if (GROVE_AI_CAMERA_ID != _system.id)
-    {
-        return false;
+  _algo.algo = get_algo();
+  _algo.model = get_model();
+  _algo.confidence = get_confidence();
+
+  if (_algo.algo != algo || _algo.model != model || _algo.confidence != confidence) {
+    if (algo != set_algo(algo)) {
+      return false;
     }
-
-    read(FEATURE_SYSTEM, CMD_SYS_READ_VERSION, NULL, 0, buf, CMD_SYS_VERSION_LENGTH);
-    _system.version = buf[0] << 8 | buf[1];
-
-    _algo.algo = get_algo();
-    _algo.model = get_model();
-    _algo.confidence = get_confidence();
-
-    if (_algo.algo != algo || _algo.model != model || _algo.confidence != confidence)
-    {
-        if (algo != set_algo(algo))
-        {
-            return false;
-        }
-        if (model != set_model(model))
-        {
-            return false;
-        }
-        if (confidence != set_confidence(confidence))
-        {
-            return false;
-        }
-        if (!config_save())
-        {
-            return false;
-        }
-        reset();
+    if (model != set_model(model)) {
+      return false;
     }
+    if (confidence != set_confidence(confidence)) {
+      return false;
+    }
+    if (!config_save()) {
+      return false;
+    }
+    reset();
+  }
 
-    return true;
+  return true;
 }
 
 uint16_t GroveAI::version() {
-    Serial.println("ai.version()");
-    return _system.version;
+  return _system.version;
 }
 
 ALGO_INDEX_T GroveAI::algo() {
-    Serial.println("ai.algo()");
-    return (ALGO_INDEX_T)_algo.algo;
+  return (ALGO_INDEX_T)_algo.algo;
 }
 
 MODEL_INDEX_T GroveAI::model() {
-    Serial.println("ai.model()");
-    return (MODEL_INDEX_T)_algo.model;
+  return (MODEL_INDEX_T)_algo.model;
 }
 
 uint8_t GroveAI::confidence() {
-    Serial.println("ai.confidence()");
-    return _algo.confidence;
+  return _algo.confidence;
 }
 
 CMD_STATE_T GroveAI::state() {
-    Serial.println("ai.state()");
-    uint8_t buf;
+  uint8_t buf;
+  read(FEATURE_SYSTEM, CMD_SYS_READ_STATE, NULL, 0, &buf, CMD_SYS_STATE_LENGTH);
+  _system.state = (CMD_STATE_T)buf;
 
-    read(FEATURE_SYSTEM, CMD_SYS_READ_STATE, NULL, 0, &buf, CMD_SYS_STATE_LENGTH);
-    _system.state = (CMD_STATE_T)buf;
-
-    return _system.state;
+  return _system.state;
 }
 
 uint16_t GroveAI::id() {
-    Serial.println("ai.id()");
-    return _system.id;
+  return _system.id;
 }
 
 bool GroveAI::invoke() {
-    Serial.println("ai.invoke()");
-    write(FEATURE_ALGO, CMD_ALGO_INOVKE, NULL, 0);
+  write(FEATURE_ALGO, CMD_ALGO_INOVKE, NULL, 0);
 
-    CMD_STATE_T ret = CMD_STATE_RUNNING;
-    while (1) {
-        ret = state();
-        if (ret == CMD_STATE_RUNNING)
-        {
-            return true;
-        }
-        else if (ret == CMD_STATE_ERROR)
-        {
-            return false;
-        }
+  CMD_STATE_T ret = CMD_STATE_RUNNING;
+  while (1) {
+    ret = state();
+    if (ret == CMD_STATE_RUNNING) {
+      return true;
     }
+    else if (ret == CMD_STATE_ERROR) {
+      return false;
+    }
+  }
 }
 
 ALGO_INDEX_T GroveAI::set_algo(ALGO_INDEX_T algo) {
-    Serial.println("ai.set_algo()");
-    uint8_t data = (uint8_t)algo;
-    if (_algo.algo != algo)
-    {
-        write(FEATURE_ALGO, CMD_ALGO_WRITE_ALGO, &data, CMD_ALGO_ALGO_LENGTH);
-        data = 0;
+  uint8_t data = (uint8_t)algo;
+  if (_algo.algo != algo) {
+  write(FEATURE_ALGO, CMD_ALGO_WRITE_ALGO, &data, CMD_ALGO_ALGO_LENGTH);
+    data = 0;
 
-        read(FEATURE_ALGO, CMD_ALGO_READ_ALGO, NULL, 0, &data, CMD_ALGO_ALGO_LENGTH);
-        if (data == algo)
-        {
-            _algo.algo = algo;
-        }
+    read(FEATURE_ALGO, CMD_ALGO_READ_ALGO, NULL, 0, &data, CMD_ALGO_ALGO_LENGTH);
+    if (data == algo) {
+      _algo.algo = algo;
     }
-    return (ALGO_INDEX_T)_algo.algo;
+  }
+  return (ALGO_INDEX_T)_algo.algo;
 }
 
 MODEL_INDEX_T GroveAI::set_model(MODEL_INDEX_T model) {
-    Serial.println("ai.set_model()");
     uint8_t data = (uint8_t)model;
     if (_algo.model != model)
     {
@@ -180,7 +156,6 @@ MODEL_INDEX_T GroveAI::set_model(MODEL_INDEX_T model) {
 }
 
 uint8_t GroveAI::set_confidence(uint8_t confidence) {
-    Serial.println("ai.set_confidence()");
     uint8_t data = confidence;
     if (_algo.confidence != confidence)
     {
@@ -350,7 +325,7 @@ CMD_GPIO_STATE_T GroveAI::gpio_get_state(uint8_t index) {
 }
 
 bool GroveAI::imu_start() {
-    Serial.println("ai.imu_start()");
+    // Serial.println("ai.imu_start()");
     uint8_t state = CMD_IMU_SAMPLE_AVAILABLE;
     write(FEATURE_IMU, CMD_IMU_WRITE_SAMPLE_STATE, &state, CMD_IMU_WRITE_SAMPLE_LENGTH);
 
@@ -358,7 +333,7 @@ bool GroveAI::imu_start() {
 }
 
 bool GroveAI::imu_stop() {
-    Serial.println("ai.imu_stop()");
+    // Serial.println("ai.imu_stop()");
     uint8_t state = 0;
     write(FEATURE_IMU, CMD_IMU_WRITE_SAMPLE_STATE, &state, CMD_IMU_WRITE_SAMPLE_LENGTH);
 
@@ -366,104 +341,79 @@ bool GroveAI::imu_stop() {
 }
 
 float GroveAI::get_acc_x() {
-    Serial.println("ai.get_acc_x()");
-    float value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_ACC_X, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_X_LENGTH);
-
-    return value;
+  float value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_ACC_X, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_X_LENGTH);
+  return value;
 }
 
 float GroveAI::get_acc_y() {
-    Serial.println("ai.get_acc_y()");
-    float value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_ACC_Y, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_Y_LENGTH);
-
-    return value;
+  float value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_ACC_Y, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_Y_LENGTH);
+  return value;
 }
 
 float GroveAI::get_acc_z() {
-    Serial.println("ai.get_acc_z()");
-    float value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_ACC_Z, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_Z_LENGTH);
-
-    return value;
+  float value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_ACC_Z, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_ACC_Z_LENGTH);
+  return value;
 }
 
 float GroveAI::get_gyro_x() {
-    Serial.println("ai.get_gyro_x()");
-    float value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_GYRO_X, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_X_LENGTH);
-
-    return value;
+  float value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_GYRO_X, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_X_LENGTH);
+  return value;
 }
 
 float GroveAI::get_gyro_y() {
-    Serial.println("ai.get_gyro_y()");
-    float value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_GYRO_Y, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_Y_LENGTH);
-    return value;
+  float value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_GYRO_Y, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_Y_LENGTH);
+  return value;
 }
 
 float GroveAI::get_gyro_z() {
-    Serial.println("ai.get_gyro_z()");
-    float value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_GYRO_Z, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_Z_LENGTH);
-
-    return value;
+  float value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_GYRO_Z, NULL, 0, (uint8_t *)&value, CMD_IMU_READ_GYRO_Z_LENGTH);
+  return value;
 }
 
+/*
+Is accelerometer data avaible
+1 True
+0 False
+*/
 bool GroveAI::acc_available() {
-    Serial.println("ai.acc_available()");
-    uint8_t value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_ACC_AVAIABLE, NULL, 0, &value, CMD_IMU_READ_ACC_AVAIABLE_LENGTH);
-
-    return value;
+  uint8_t value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_ACC_AVAIABLE, NULL, 0, &value, CMD_IMU_READ_ACC_AVAIABLE_LENGTH);
+  return value;
 }
 
+/*
+Is gyroscope data avaible
+1 True
+0 False
+*/
 bool GroveAI::gyro_available() {
-    Serial.println("ai.gyro_available()");
-    uint8_t value = 0;
-
-    read(FEATURE_IMU, CMD_IMU_READ_GYRO_AVAIABLE, NULL, 0, &value, CMD_IMU_READ_GYRO_AVAIABLE_LENGTH);
-
-    return value;
+  uint8_t value = 0;
+  read(FEATURE_IMU, CMD_IMU_READ_GYRO_AVAIABLE, NULL, 0, &value, CMD_IMU_READ_GYRO_AVAIABLE_LENGTH);
+  return value;
 }
+
 
 void GroveAI::read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_len, uint8_t *buf, uint16_t len) {
-    Serial.println("ai.read()");
-    uint8_t i = 0;
-    uint8_t c = 0;
-    // while (digitalRead(_signal_pin) == 0)
-    // {
-    // }
-    delay(5);
-    // while (digitalRead(_signal_pin) == 0)
-    // {
-    // }
+  uint8_t i = 0;
+  uint8_t c = 0;
+
+  delay(5);
 
     _wire_com->beginTransmission(_slave_addr);
     _wire_com->write(feature);
     _wire_com->write(cmd);
-    for (int j = 0; j < param_len; j++)
-    {
+    for (int j = 0; j < param_len; j++) {
         _wire_com->write(param[j]);
     }
     _wire_com->endTransmission();
 
-    // while (digitalRead(_signal_pin) == 0)
-    // {
-    // }
     delay(5);
-    // while (digitalRead(_signal_pin) == 0)
-    // {
-    // }
 
     _wire_com->requestFrom(_slave_addr, len);
 
@@ -477,20 +427,12 @@ void GroveAI::read(uint8_t feature, uint8_t cmd, uint8_t *param, uint8_t param_l
 }
 
 void GroveAI::write(uint8_t feature, uint8_t cmd, uint8_t *buf, uint16_t len) {
-    Serial.println("ai.write()");
     uint32_t tick = millis();
-    // while (digitalRead(_signal_pin) == 0)
-    // {
-    // }
     delay(5);
-    // while (digitalRead(_signal_pin) == 0)
-    // {
-    // }
     _wire_com->beginTransmission(_slave_addr);
     _wire_com->write(feature);
     _wire_com->write(cmd);
-    for (uint16_t i = 0; i < len; i++)
-    {
+    for (uint16_t i = 0; i < len; i++) {
         _wire_com->write(buf[i]);
     }
     _wire_com->endTransmission();

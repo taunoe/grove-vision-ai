@@ -2,17 +2,19 @@
 File:     main.cpp
 Author:   Tauno Erik
 Started:  18.12.2022
-Edited:   18.12.2022
-*/
-#include <Arduino.h>
-#include "Seeed_Arduino_GroveAI.h"
-#include <Wire.h>
+Edited:   30.12.2022
 
-/*
 Raspberry Pi Pico RP2040 default i2c pins
   SDA GP4
   SCL GP5
 */
+#include <Arduino.h>
+#include <Wire.h>
+
+#define DEBUG
+#include "utils_debug.h"
+
+#include "Seeed_Arduino_GroveAI.h"
 
 GroveAI ai(Wire);
 uint8_t state = 0;
@@ -21,11 +23,11 @@ uint8_t state = 0;
 void setup() {
   Serial.begin(115200);
   delay(2000);
-  Serial.println("Begin");
+  DEBUG_PRINT("Begin");
 
   delay(1000);
   Wire.begin();
-  Serial.println("Wire.begin()");
+  DEBUG_PRINT("Wire.begin()");
 
 
   // Object detection and pre-trained model 1
@@ -33,7 +35,8 @@ void setup() {
   //ALGO_OBJECT_DETECTION
   //ALGO_OBJECT_COUNT
   //ALGO_IMAGE_CLASSIFICATION. 
-  
+
+/*
   while (!ai.begin(ALGO_OBJECT_DETECTION, MODEL_EXT_INDEX_2)) {
     delay(100);
     Serial.print("state 0");
@@ -55,10 +58,35 @@ void setup() {
   } else {
     Serial.println("Algo begin failed.");
   }
+*/
+int imu = ai.imu_start();
+DEBUG_PRINT(imu);
 
 }
 
 void loop() {
+  delay(100);
+  if (ai.acc_available()) {
+    //Serial.println("acc_available");
+    Serial.print("acc_x ");
+    Serial.print(ai.get_acc_x());
+    Serial.print("acc_y ");
+    Serial.print(ai.get_acc_y());
+    Serial.print("acc_z ");
+    Serial.println(ai.get_acc_z());
+    
+  }
+  
+  if (ai.gyro_available()) {
+    //Serial.println("gyro_available");
+    Serial.print("gyro_x ");
+    Serial.print(ai.get_gyro_x());
+    Serial.print("gyro_y ");
+    Serial.print(ai.get_gyro_y());
+    Serial.print("gyro_z ");
+    Serial.println(ai.get_gyro_z());
+  }
+  /*
   if (state == 1) {
     uint32_t tick = millis();
 
@@ -103,5 +131,5 @@ void loop() {
   } else {
     //Serial.println("state == 0");
   }
-
+*/
 }
