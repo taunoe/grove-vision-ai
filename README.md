@@ -5,7 +5,7 @@
 Grove Vision AI Module contains a camera (OV2640) and two microcontrollers.
 
 - **Himax HX6537-A** is an ultra-low-power, high-performance microcontroller designed for battery-powered TinyML applications.
-- **BL702** 32-bit RISC CPU
+- **BL702** 32-bit RISC CPU. BL702 is the USB-UART chip which enables the communication between the PC and the Himax chip.
 
 In addition, there are two sensors:
 
@@ -28,6 +28,10 @@ The camera supports resolution up to 1600x1200 px but is set to 192x192 px due t
 ![Grove pins](img/Grove_pins-01.jpg)
 
 It is not open source product. [Link](https://forum.seeedstudio.com/t/possibility-on-writing-custom-firmware-for-grove-vision-ai-module/266540/6)
+
+## Update BL702 chip firmware
+
+[Edge Impulse: Update BL702 chip firmware](https://docs.edgeimpulse.com/docs/development-platforms/officially-supported-mcu-targets/seeed-grove-vision-ai#1.-update-bl702-chip-firmware)
 
 ## Build Models
 
@@ -73,6 +77,7 @@ Restart the udev rules:
 
 ## Links
 
+- [Edge Impulse Seeed Grove Vision Ai](https://docs.edgeimpulse.com/docs/development-platforms/officially-supported-mcu-targets/seeed-grove-vision-ai)
 - [Grove - Vision AI Module](https://www.seeedstudio.com/Grove-Vision-AI-Module-p-5457.html)
 - [Grove-Vision-AI-Module](https://wiki.seeedstudio.com/Grove-Vision-AI-Module/) wiki
 - [TinyML Package Monitor](https://www.hackster.io/hendra/tinyml-package-monitor-ef4710) Hackster.io
@@ -81,4 +86,4 @@ Restart the udev rules:
 - [hackster.io/wesee/bird-watcher-with-camera-trap-2cb71f](https://www.hackster.io/wesee/bird-watcher-with-camera-trap-2cb71f)
 - [hackster.io/kutluhan-aktar/iot-ai-driven-tree-disease-identifier-w-edge-impulse-mms-1b5ff6](https://www.hackster.io/kutluhan-aktar/iot-ai-driven-tree-disease-identifier-w-edge-impulse-mms-1b5ff6)
 ___
-Tauno Erik 2022
+Tauno Erik 2022-2023
