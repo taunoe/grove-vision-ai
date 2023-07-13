@@ -1,4 +1,4 @@
-# Grovr Vision AI Module
+# Grove Vision AI Module
 
 ## What it is
 
