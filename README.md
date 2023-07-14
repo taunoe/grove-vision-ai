@@ -75,6 +75,12 @@ Restart the udev rules:
 
 `sudo udevadm control --reload-rules`
 
+## EdgeLab
+
+- [github.com/Seeed-Studio/EdgeLab](https://github.com/Seeed-Studio/EdgeLab)
+- [github.com/Seeed-Studio/edgelab-model-zoo](https://github.com/Seeed-Studio/edgelab-model-zoo)
+- [github.com/Seeed-Studio/edgelab-example-vision-ai](https://github.com/Seeed-Studio/edgelab-example-vision-ai)
+
 ## Links
 
 - [Edge Impulse Seeed Grove Vision Ai](https://docs.edgeimpulse.com/docs/development-platforms/officially-supported-mcu-targets/seeed-grove-vision-ai)
